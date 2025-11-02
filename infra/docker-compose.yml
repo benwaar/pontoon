@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:25.0
+    command: start-dev
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8080:8080"
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: game
+      POSTGRES_PASSWORD: game
+      POSTGRES_DB: pontoon
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  game-service:
+    build: ../services/game
+    environment:
+      DATABASE_URL: postgres://game:game@db:5432/pontoon?sslmode=disable
+      OIDC_ISSUER: http://keycloak:8080/realms/pontoon
+      OIDC_AUDIENCE: pontoon-api
+    depends_on:
+      - db
+      - keycloak
+    ports:
+      - "9000:9000"
+
+  ai-service:
+    build: ../services/ai
+    ports:
+      - "9001:9001"
+
+volumes:
+  postgres_data:
