@@ -1,0 +1,50 @@
+{
+	"realm": "pontoon",
+	"enabled": true,
+	"registrationAllowed": false,
+	"rememberMe": true,
+	"resetPasswordAllowed": true,
+	"loginWithEmailAllowed": true,
+	"duplicateEmailsAllowed": false,
+	"clients": [
+		{
+			"clientId": "pontoon-api",
+			"name": "Pontoon API",
+			"protocol": "openid-connect",
+			"enabled": true,
+			"publicClient": false,
+			"secret": "pontoon-secret",
+			"redirectUris": [
+				"http://localhost:9000/*"
+			],
+			"webOrigins": [
+				"http://localhost:9000"
+			],
+			"baseUrl": "http://localhost:9000",
+			"adminUrl": "http://localhost:9000",
+			"attributes": {
+				"post.logout.redirect.uris": "http://localhost:9000/*"
+			},
+			"directAccessGrantsEnabled": true,
+			"standardFlowEnabled": true,
+			"implicitFlowEnabled": false,
+			"serviceAccountsEnabled": true
+		}
+	],
+	"users": [
+		{
+			"username": "user",
+			"enabled": true,
+			"emailVerified": false,
+			"firstName": "Dev",
+			"lastName": "User",
+			"credentials": [
+				{
+					"type": "password",
+					"value": "user",
+					"temporary": false
+				}
+			]
+		}
+	]
+}

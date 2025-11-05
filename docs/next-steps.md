@@ -1,13 +1,17 @@
 # Next steps (with proto / contracts)
 
-## Phase 1 – Local skeleton (now)
-1. `cd infra && docker compose up --build`
-   - keycloak (http://localhost:8080, admin/admin)
-   - postgres (game/game, db=pontoon)
-   - game-service (Go) → http://localhost:9000/healthz
-   - ai-service (Python) → http://localhost:9001/healthz
-2. Create Keycloak realm `pontoon`, client `pontoon-api`.
-3. ✅ Goal: everything runs locally with hardcoded/dev creds.
+## Phase 1 – Local skeleton (current)
+Scripted automation in place. Summary (authoritative details in `docs/step-notes.md`):
+| Service | Host Port | Notes |
+|---------|-----------|-------|
+| Keycloak | 8081 | admin/admin; realm auto-import |
+| Postgres | 55432 | roles: postgres, game; db: pontoon |
+| Game Service | 9000 | health: /healthz |
+| AI Service | 9001 | health: /healthz |
+
+Realm file: `infra/realm-pontoon.json` (embedded dev user + client).
+Helper scripts: up, down, db-reset, configure-realm, psql, clean-docker, drop-infra.
+✅ Goal: reproducible local dev environment.
 
 ---
 
@@ -104,3 +108,33 @@
 3. CI: only `terraform fmt` and `terraform validate` (no apply).
 4. Later: add GitHub secrets / Workload Identity to allow deploy.
 5. ✅ Goal: infra codified, deployments still under your control.
+
+---
+
+## Future Enhancements (Backlog)
+Short-term backlog items not yet scheduled to a phase:
+
+### Auth / Realm
+* Add roles & role mappings to realm JSON
+* Token fetch helper script (`tools/get-token.sh`)
+
+### Data / Persistence
+* Initial schema migration scripts for game service
+* Automated migrations runner in build pipeline
+
+### Testing / Quality
+* Automated tests for health endpoints and auth flow
+* Add integration test hitting Keycloak token + protected endpoint
+
+### Tooling / Dev UX
+* Improve realm configure script to remove grep exit 141 (parse JSON)
+* Make build script optionally run `docker compose pull`
+
+### Observability (Later)
+* Add basic structured logging & request tracing (OpenTelemetry)
+* Add /metrics endpoints (Prometheus) for game & ai services
+
+### Stretch
+* WebSocket realtime table updates
+* Horizontal scaling considerations (stateless services + shared DB)
+* Feature flags for experimental AI assistance
