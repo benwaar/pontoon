@@ -1,31 +1,33 @@
-version: "3.9"
 
 services:
   keycloak:
-    image: quay.io/keycloak/keycloak:25.0
+    container_name: infra-keycloak-dev
+    build: ./keycloak
     command: start-dev
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
     ports:
-      - "8080:8080"
+      - "8081:8080"
 
   db:
-    image: postgres:16
+    container_name: infra-db-dev
+    build: ./postgres
     environment:
-      POSTGRES_USER: game
-      POSTGRES_PASSWORD: game
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
       POSTGRES_DB: pontoon
     ports:
-      - "5432:5432"
+      - "55432:5432"  # Host port changed to avoid conflict with local Postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
   game-service:
+    container_name: infra-game-service-dev
     build: ../services/game
     environment:
       DATABASE_URL: postgres://game:game@db:5432/pontoon?sslmode=disable
-      OIDC_ISSUER: http://keycloak:8080/realms/pontoon
+      OIDC_ISSUER: http://keycloak:8081/realms/pontoon
       OIDC_AUDIENCE: pontoon-api
     depends_on:
       - db
@@ -34,6 +36,7 @@ services:
       - "9000:9000"
 
   ai-service:
+    container_name: infra-ai-service-dev
     build: ../services/ai
     ports:
       - "9001:9001"
