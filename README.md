@@ -11,3 +11,6 @@ Learning / playground repo for a realtime card game (Pontoon) with:
 - **Terraform + GitHub Actions** for infra/CI
 
 This repo is meant to be **cloud-agnostic-ish**: local uses Keycloak + Postgres, prod can use GCP (Cloud Run, Firebase Auth, Cloud SQL), but the app code talks to OIDC + Postgres and can be pointed elsewhere.
+
+Phase 1 complete: automated local stack (custom Postgres + Keycloak realm import, helper scripts, health checks) — see full recap in [Phase 1 Expanded](./docs/phase1-expanded.md).
+

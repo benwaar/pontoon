@@ -1,33 +1,16 @@
 # Next steps (with proto / contracts)
 
-## Phase 1 – Local skeleton (current)
-Scripted automation in place. Summary (authoritative details in `docs/step-notes.md`):
-| Service | Host Port | Notes |
-|---------|-----------|-------|
-| Keycloak | 8081 | admin/admin; realm auto-import |
-| Postgres | 55432 | roles: postgres, game; db: pontoon |
-| Game Service | 9000 | health: /healthz |
-| AI Service | 9001 | health: /healthz |
+## Phase 1 – Local Setup
 
-Realm file: `infra/realm-pontoon.json` (embedded dev user + client).
-Helper scripts: up, down, db-reset, configure-realm, psql, clean-docker, drop-infra.
-✅ Goal: reproducible local dev environment.
+Established a fully scripted local stack: custom Postgres (role `game`, DB `pontoon`) + custom Keycloak (realm auto-import with seeded dev user & client), port conflict resolution (Keycloak 8081, Postgres 55432), health verification (containers + DB SELECT 1), and helper scripts for build/up/down/reset/realm configuration, psql access, cleanup. This gives a reproducible baseline for gameplay and auth work.
+
+See detailed recap: [Phase 1 Expanded](./phase1-expanded.md).
 
 ---
 
 ## Phase 2 – Game logic
-1. In `services/game/internal/domain/` implement basic Pontoon:
-   - deck / shuffle
-   - player hand, dealer hand
-   - score calculation
-2. Add endpoints:
-   - `POST /api/table` → create table
-   - `POST /api/table/{id}/join`
-   - `POST /api/table/{id}/action` (hit/stick)
-   - `GET /api/table/{id}` → current state
-   - (later) `GET /ws/table/{id}` for realtime
-3. Persist finished hands in Postgres.
-4. ✅ Goal: you can play a round locally via HTTP.
+
+Next [Phase 2 Plan](./phase2-expanded.md).
 
 ---
 
