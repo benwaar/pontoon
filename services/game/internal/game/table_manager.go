@@ -3,10 +3,11 @@ package game
 
 import (
 	"errors"
-	"github.com/google/uuid"
 	"pontoon/game/internal/domain"
 	"sync"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 // TableStatus represents current lifecycle of a table.
