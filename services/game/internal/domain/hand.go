@@ -1,8 +1,10 @@
+// Package domain defines fundamental card and hand primitives used by the game logic.
 package domain
 
 // HandStatus indicates current status of a hand.
 type HandStatus string
 
+// Hand status constants.
 const (
 	HandPlaying   HandStatus = "playing"
 	HandBust      HandStatus = "bust"

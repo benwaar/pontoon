@@ -1,3 +1,4 @@
+// Package domain defines fundamental card and hand primitives used by the game logic.
 package domain
 
 import (
@@ -8,6 +9,7 @@ import (
 // Suit represents a card suit.
 type Suit string
 
+// Suit constants.
 const (
 	Clubs    Suit = "C"
 	Diamonds Suit = "D"
@@ -18,6 +20,7 @@ const (
 // Rank represents card rank.
 type Rank string
 
+// Rank constants.
 const (
 	Ace   Rank = "A"
 	Two   Rank = "2"

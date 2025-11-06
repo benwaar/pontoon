@@ -2,23 +2,42 @@
 
 ## Table of Contents
 
-- [Homebrew](#homebrew)
-- [Install NVM (Node Version Manager)](#install-nvm-node-version-manager)
-- [MKCERT (SSL for Localhost)](#mkcert-ssl-for-localhost)
-- [Docker & Docker Compose](#docker--docker-compose)
-- [MicroK8s](#microk8s)
-- [Kubernetes Setup](#kubernetes-setup)
-- [Enable Kubernetes (Visual Guide)](#enable-kubernetes-visual-guide)
-- [Keycloak Get started](#keycloak-get-started)
-- [Keycloak Local SSL](#keycloak-local-ssl)
-- [Pyenv (manage multiple versions of Python)](#python--pyenv-manage-multiple-versions-of-python)
-- [Python Version Setup](#python-version-setup)
-- [Go Toolchain & Version Management (goenv)](#go-toolchain--version-management-goenv)
-  - [Install goenv](#install-goenv)
-  - [Configure shell](#configure-shell)
-  - [Install Go versions](#install-go-versions)
-  - [Switch versions](#switch-versions)
-  - [Project workflow](#project-workflow)
+- [Notes on setting up a new machine](#notes-on-setting-up-a-new-machine)
+  - [Table of Contents](#table-of-contents)
+  - [Homebrew](#homebrew)
+    - [Homebrew "brew" package manager (old ruby script still works)](#homebrew-brew-package-manager-old-ruby-script-still-works)
+    - [Update .zshrc for brew](#update-zshrc-for-brew)
+    - [Add Homebrew to path (brew)](#add-homebrew-to-path-brew)
+    - [Add Node Version Manager (nvm)](#add-node-version-manager-nvm)
+    - [Save and load .zshrc](#save-and-load-zshrc)
+  - [Install NVM (Node Version Manager)](#install-nvm-node-version-manager)
+    - [Install Node](#install-node)
+  - [MKCERT (SSL for Localhost)](#mkcert-ssl-for-localhost)
+    - [Install mkcert](#install-mkcert)
+    - [Use mkcert](#use-mkcert)
+    - [Config dev domain](#config-dev-domain)
+    - [Docker \& Docker Compose](#docker--docker-compose)
+    - [MicroK8s](#microk8s)
+  - [Kubernetes Setup](#kubernetes-setup)
+  - [Enable Kubernetes (Visual Guide)](#enable-kubernetes-visual-guide)
+  - [Keycloak Get started](#keycloak-get-started)
+  - [Keycloak Local SSL](#keycloak-local-ssl)
+    - [(OLD) Make a dev key pair](#old-make-a-dev-key-pair)
+    - [(BETTER) Make a dev key pair using mkcert (see the Angular project)](#better-make-a-dev-key-pair-using-mkcert-see-the-angular-project)
+    - [copy the files to a folder then chmod the key](#copy-the-files-to-a-folder-then-chmod-the-key)
+    - [Run Keycloack using ssl keys](#run-keycloack-using-ssl-keys)
+    - [Navigate to Keycloak](#navigate-to-keycloak)
+  - [Pyenv (manage multiple versions of Python)](#pyenv-manage-multiple-versions-of-python)
+  - [Python Version Setup](#python-version-setup)
+    - [2. Create Virtual Environment](#2-create-virtual-environment)
+  - [Go Toolchain \& Version Management (goenv)](#go-toolchain--version-management-goenv)
+    - [Install goenv](#install-goenv)
+    - [Configure shell](#configure-shell)
+    - [Install Go versions](#install-go-versions)
+    - [Switch versions](#switch-versions)
+    - [Project workflow](#project-workflow)
+  - [VS Code Extensions](#vs-code-extensions)
+    - [Notes](#notes)
 
 ## Homebrew
 
@@ -294,3 +313,44 @@ Add dependencies:
 go get github.com/stretchr/testify@v1.9.0
 go mod tidy
 ```
+
+## VS Code Extensions
+
+Provider-agnostic extension set focused on language support, container/dev workflow, and developer productivity. 
+
+```bash
+# Core installs (agnostic as possible)
+code --install-extension golang.go
+code --install-extension ms-python.python
+code --install-extension ms-azuretools.vscode-docker
+code --install-extension ms-vscode.makefile-tools
+code --install-extension eamodio.gitlens
+code --install-extension github.copilot
+code --install-extension github.copilot-chat
+
+# Optional but useful
+code --install-extension yzhang.markdown-all-in-one
+code --install-extension redhat.vscode-yaml
+code --install-extension humao.rest-client
+```
+
+| Tier | Purpose | Extension | Identifier |
+|------|---------|-----------|------------|
+| Core | Go language support (LSP, debugging, tests) | Go | `golang.go` |
+| Core | Python development (AI service) | Python | `ms-python.python` |
+| Core | Dockerfile & Compose editing / container mgmt | Docker | `ms-azuretools.vscode-docker` |
+| Core | Makefile syntax/help (future build scripts) | Makefile Tools | `ms-vscode.makefile-tools` |
+| Core | Git insights (blame, history) | GitLens | `eamodio.gitlens` |
+| Core | AI pair programming | GitHub Copilot | `github.copilot` |
+| Core | Copilot chat / inline assistance | GitHub Copilot Chat | `github.copilot-chat` |
+| Optional | Markdown authoring | Markdown All in One | `yzhang.markdown-all-in-one` |
+| Optional | YAML schema/validation (K8s, Compose) | YAML | `redhat.vscode-yaml` |
+| Optional | API exploration without Postman | REST Client | `humao.rest-client` |
+
+
+### Notes
+1. Delve debugging is handled via `golang.go`; keep Go version alignment to avoid mismatch noise.
+2. Cloud-neutral approach: use generic Docker + Kubernetes tooling (kubectl, manifests) instead of vendor extensions; add vendor tools only when deploying.
+3. Formatting: rely on language servers + Prettier (if installed) but enforce formatting in CI with future linters (e.g., `golangci-lint`, `black` for Python) to avoid editor drift.
+4. If dev containers are adopted, list only core + truly required optional extensions inside `devcontainer.json` to keep startup lightweight.
+

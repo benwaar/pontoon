@@ -1,4 +1,3 @@
-
 services:
   keycloak:
     container_name: infra-keycloak-dev
