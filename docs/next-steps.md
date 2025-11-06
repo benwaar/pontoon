@@ -111,6 +111,80 @@ See detailed scope: [Phase 2 Expanded](./phase2-expanded.md).
 - 📊 Coverage: collect Go coverage profile + pytest coverage; optional Codecov upload later.
 - 🐳 Image Scan (optional): integrate `trivy` after Docker build.
 
+### Planned CI Workflow (Added)
+Foundational GitHub Actions workflow to be introduced early in Phase 5 (can be pulled forward if desired):
+
+```yaml
+# .github/workflows/ci.yml (planned)
+name: CI
+on:
+   push:
+      branches: [ main ]
+   pull_request:
+      branches: [ main ]
+
+jobs:
+   game-tests:
+      runs-on: ubuntu-latest
+      steps:
+         - uses: actions/checkout@v4
+         - name: Set up Go
+            uses: actions/setup-go@v5
+            with:
+               go-version: '1.25.1'
+               cache: true
+         - name: Run domain tests (no CGO)
+            run: |
+               ./tools/test-go.sh --no-cgo
+         - name: Upload coverage (artifact)
+            if: always()
+            uses: actions/upload-artifact@v4
+            with:
+               name: game-coverage
+               path: services/game/coverage.out
+
+   ai-tests:
+      runs-on: ubuntu-latest
+      steps:
+         - uses: actions/checkout@v4
+         - name: Set up Python
+            uses: actions/setup-python@v5
+            with:
+               python-version: '3.11'
+               cache: 'pip'
+         - name: Install deps (placeholder)
+            run: |
+               echo "(future) pip install -r services/ai/requirements.txt"
+         - name: Run tests (placeholder)
+            run: echo "(future) pytest"
+
+   docker-build:
+      needs: [game-tests, ai-tests]
+      runs-on: ubuntu-latest
+      steps:
+         - uses: actions/checkout@v4
+         - name: Set up Docker Buildx
+            uses: docker/setup-buildx-action@v3
+         - name: Build images (no push)
+            run: |
+               docker build -t pontoon-game ./services/game
+               docker build -t pontoon-ai ./services/ai
+```
+
+Key Characteristics:
+- Fail fast: test jobs gate the image build via `needs`.
+- Uses existing `tools/test-go.sh` to ensure identical local/CI behavior.
+- Uploads coverage as an artifact (Codecov/Sonar step can be appended later).
+- Placeholder Python & AI steps allow incremental test adoption.
+- No secrets required; safe to enable early.
+
+Future Enhancements:
+- Matrix test strategy (Go across OS / versions if needed).
+- Add `golangci-lint` before `game-tests` (caching enabled).
+- Persist test summaries via `actions/upload-artifact` + add badge.
+- Include migrations & integration tests (spin up Postgres service) once persistence layer implemented.
+- Trigger code generation job when `contracts/**` changes.
+
 ---
 
 ## Phase 6 – Prod-ish auth swap
