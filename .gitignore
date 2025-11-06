@@ -27,3 +27,17 @@ doc/api/
 
 .flutter-plugins
 .flutter-plugins-dependencies
+
+# Go specific ignores (retain explicit coverage file above while also ignoring any others)
+coverage.out
+**/coverage.out
+*.test
+*.out
+*.exe
+*.dll
+*.so
+*.dylib
+# Common local build output directories
+bin/
+dist/
+
