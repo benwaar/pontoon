@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"pontoon/game/internal/game"
 )
@@ -60,8 +61,10 @@ func main() {
 		http.Error(w, "unsupported endpoint", http.StatusNotFound)
 	})
 
-	log.Println("game service listening on :9000")
-	log.Fatal(http.ListenAndServe(":9000", nil))
+	port := os.Getenv("PORT")
+	if port == "" { port = "9000" }
+	log.Printf("game service listening on :%s", port)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
 
 func writeJSON(w http.ResponseWriter, v any) {
