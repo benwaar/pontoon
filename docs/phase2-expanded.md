@@ -85,14 +85,26 @@ Testing: simulate mock server in unit tests.
 - Optional: integrate `air` for live reload on Go changes.
 - Extend `build.sh` to run migrations (or separate explicit `tools/migrate.sh`).
 - Add `tools/jwt-decode.sh` (decode token segments for debugging).
+ 
+##### 🛠 Dev Container Adoption
+Adopt `.devcontainer/devcontainer.json` early in Phase 2 to lock consistent toolchains (Go 1.22, Python 3.11) and speed onboarding.
+
+Planned adjustments:
+- Add `remoteUser` (non-root) for better file permissions.
+- Add `postCreateCommand` to run `./tools/check-health.sh || true` and optionally `./tools/migrate.sh` once created.
+- (Optional) Pre-install `air` for live reload and `golang-migrate` CLI inside container.
+
+Benefits:
+- Deterministic versions across machines.
+- Faster pairing/codespaces trial later.
+- Eliminates local Go/Python installation requirement.
+
+Exit criteria: opening repo in VS Code → “Reopen in Container” yields a ready environment where `go test ./...` and `./tools/check-health.sh` succeed.
 
 #### 8. CI Bootstrap
-- GitHub Actions workflow: trigger on push PR.
-- Steps: checkout → setup Go → build → run unit tests → run migrations in ephemeral Postgres → run a smoke test hitting `/api/health` (add if missing) and maybe create table.
 Artifacts: test reports (later).
 
-#### 9. Observability
-- Structured logging (JSON) with request ID (generate if absent) and table/hand IDs.
+Revision: Phase 2 expansion draft (devcontainer note added).
 - Basic metrics: total tables created, active hands, moves per minute.
 - Export `/metrics` (Prometheus client for Go).
 
