@@ -41,3 +41,6 @@ coverage.out
 bin/
 dist/
 
+# Delve / Go debug session binaries
+**/__debug_bin**
+
