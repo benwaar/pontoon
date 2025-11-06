@@ -13,6 +13,12 @@
 - [Keycloak Local SSL](#keycloak-local-ssl)
 - [Pyenv (manage multiple versions of Python)](#python--pyenv-manage-multiple-versions-of-python)
 - [Python Version Setup](#python-version-setup)
+- [Go Toolchain & Version Management (goenv)](#go-toolchain--version-management-goenv)
+  - [Install goenv](#install-goenv)
+  - [Configure shell](#configure-shell)
+  - [Install Go versions](#install-go-versions)
+  - [Switch versions](#switch-versions)
+  - [Project workflow](#project-workflow)
 
 ## Homebrew
 
@@ -224,4 +230,67 @@ rm -rf venv
 python -m venv venv
 source venv/bin/activate
 python --version  # Verify it shows 3.9.19
+```
+
+## Go Toolchain & Version Management (goenv)
+
+You can manage multiple Go versions similarly to `pyenv` using `goenv`. 
+
+### Install goenv
+
+```bash
+brew update
+brew install goenv
+```
+
+### Configure shell
+Append to `~/.zshrc`:
+```bash
+export GOENV_ROOT="$HOME/.goenv"
+export PATH="$GOENV_ROOT/bin:$PATH"
+eval "$(goenv init -)"
+```
+Reload:
+```bash
+source ~/.zshrc
+```
+
+### Install Go versions
+List available versions:
+```bash
+goenv install -l | grep 1.22
+```
+Install specific versions:
+```bash
+goenv install 1.22.5
+goenv install 1.21.11
+```
+
+### Switch versions
+Global (all shells):
+```bash
+goenv global 1.22.5
+```
+Per project (creates `.go-version` in repo):
+```bash
+cd /Users/DBenoy/src/_research/_benwaar/pontoon/services/game
+goenv local 1.22.5
+```
+Verify:
+```bash
+go version
+go env GOROOT
+```
+
+### Project workflow
+From `services/game`:
+```bash
+go mod tidy          # sync deps
+go test ./...        # run tests
+go build ./...       # build binaries
+```
+Add dependencies:
+```bash
+go get github.com/stretchr/testify@v1.9.0
+go mod tidy
 ```
